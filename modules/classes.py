@@ -52,11 +52,16 @@ class Vertex:
 
 
 class Graph:
-    def __init__(self, vertex_numbers, linking):
+    def __init__(self, vertex_numbers, linking,weights):
         self.vertices = {} # we store vertex obj
         self.vertex_numbers = vertex_numbers
         self.linking_structure = linking # matrix?
-        self.edges = [] #is it redundant? 
+        self.edges = [] #is it redundant?
+
+        #automatically calls init Vertex passing weights
+        self.initVertex(weights)
+        #automatically calls buildEdges in order to init all
+        self.buildEdges()
 
     def initVertex(self, weight):
         for i in range(self.vertex_numbers):
@@ -64,8 +69,8 @@ class Graph:
             self.vertices[i] = vertex
 
     def buildEdges(self):
-        for i in range(self.nodes_number): 
-            for j in range(self.nodes_number):
+        for i in range(self.vertex_numbers): 
+            for j in range(self.vertex_numbers):
                 if(self.linking_structure[i][j] == 1): #link presente
                     #aggiungi ai vicini sia lato vertice
                     self.vertices[i].addNeighbors(self.vertices[j])
@@ -73,5 +78,7 @@ class Graph:
                     edge = [self.vertices[i].name, self.vertices[j].name]
                     self.edges.append(edge)
 
+    def checkLink(i,j):
+        pass
 
 

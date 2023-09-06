@@ -27,4 +27,49 @@ crossover probability
 mutation probability
 
 
+how to calculate fitness?
+
+Fitness is the sum of selected vertex (took from solution -> bit 1)
+
+So we have to sum vertex weights if a edge is present
+
 """
+
+
+import numpy as np
+
+class Mutation:
+    def __init__(self,vertices):
+
+        #population should be vertex
+        self.mean_scores = [] 
+        self.best_scores = [] 
+
+        self.vertices = vertices
+
+        self.scoreFitness = 0
+
+        #generate an array in order to select (turn on VERTICES)
+        self.population = self.__generateRandom__(len(vertices))
+
+    def __generateRandom__(self,populationNumber):
+        pop_random = []
+
+        np.random.seed()
+        for _ in range(populationNumber): #uniform prob or not?
+            pop_random.append(int(np.random.choice(np.arange(0,2)))) #, p=[0.01, 0.95]
+        return pop_random
+    
+    def fitness(self):
+        total_fitness = 0
+        for i in range(len(self.population)):
+            if(self.population[i] == 1):
+                localW = int(self.vertices[i].weight)
+                print("adding w:"+str(localW))
+                total_fitness += localW
+
+        self.scoreFitness = total_fitness
+    
+    
+
+
