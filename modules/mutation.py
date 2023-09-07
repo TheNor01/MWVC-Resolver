@@ -60,6 +60,9 @@ class Mutation:
             pop_random.append(int(np.random.choice(np.arange(0,2)))) #, p=[0.01, 0.95]
         return pop_random
     
+    def ResetPopulation(self,population):
+        self.population=population
+
     def fitness(self):
         total_fitness = 0
         for i in range(len(self.population)):

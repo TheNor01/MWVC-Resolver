@@ -1,6 +1,9 @@
 from modules.classes import Graph
 from modules.mutation import Mutation
+from modules.utiity import Selection
 from settings import setting
+
+import random
 INSTANCE_PATH = "instances/"
 
 if __name__ == "__main__":
@@ -57,8 +60,6 @@ if __name__ == "__main__":
 
     print("Population setting: "+str(setting.POPULATION))
 
-
-
     #We should create a set of random solution
 
     ALL_POPULATION = []
@@ -76,4 +77,30 @@ if __name__ == "__main__":
 
         #bug fitness is always zero --> solved
 
-    exit()
+    for iteration in range(setting.LIMIT_ITER):
+
+        #selection step
+
+        for _ in range(int(setting.POPULATION / 2)): #to check
+
+            #SELECTION
+                #0 : roulette
+                #1 : Tournament
+                #2 : random
+            parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
+
+            print(parentA.population)
+            print(parentA.scoreFitness)
+            print(parentB.population)
+            print(parentB.scoreFitness)
+
+            #CROSSOVER  https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
+            
+
+            if random.random() <= setting.CROSS_P:
+
+
+
+            
+        
+        pass
