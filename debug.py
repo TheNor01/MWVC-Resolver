@@ -1,6 +1,6 @@
 from modules.classes import Graph
 from modules.mutation import Mutation
-from modules.utiity import Selection
+from modules.utiity import *
 from settings import setting
 
 import random
@@ -64,6 +64,12 @@ if __name__ == "__main__":
 
     ALL_POPULATION = []
 
+    if(setting.POPULATION <= 1):
+        print("SET A POPULATION > 1")
+        exit()
+
+    FE = 1 #F E = 2 × 104 as the maximum number for objective function evaluations.
+
     for i in range(setting.POPULATION):
         print("sol:"+str(i))
         mutationTool = Mutation(graph.vertices)
@@ -81,13 +87,24 @@ if __name__ == "__main__":
 
         #selection step
 
-        for _ in range(int(setting.POPULATION / 2)): #to check
+        #for _ in range(int(setting.POPULATION / 2)): #to check
+        for _ in range(1): #test
 
             #SELECTION
                 #0 : roulette
                 #1 : Tournament
                 #2 : random
-            parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
+
+
+            ## !!!!!!!!! doesn't change, Try different name
+
+            #solution  --> fix
+            #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
+
+
+
+            print("SELECTION PHASE...")
+            parentA, parentB = Selection(2,ALL_POPULATION,2) #method, pop, how many parents
 
             print(parentA.population)
             print(parentA.scoreFitness)
@@ -95,9 +112,51 @@ if __name__ == "__main__":
             print(parentB.scoreFitness)
 
             #CROSSOVER  https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
-            
+            crossPA = Mutation(graph.vertices)
+            crossPB = Mutation(graph.vertices)
 
             if random.random() <= setting.CROSS_P:
+
+                print("CROSSOVER PHASE...")
+                parentAP,parentBP = Crossover(3,parentA,parentB,nodes_number)
+
+                crossPA.SetPopulation(parentAP)
+                crossPA.fitness()
+
+                crossPB.SetPopulation(parentBP)
+                crossPB.fitness()
+
+                FE +=2
+
+                print(crossPA.population)
+                print(crossPA.scoreFitness)
+                print(crossPB.population)
+                print(crossPB.scoreFitness)
+
+            else:
+                crossPA.SetPopulation(parentA.population)
+                crossPB.SetPopulation(parentB.population)
+
+
+            #Mutation, alter a single bit(iteration??)
+            for i in range(nodes_number):
+                if random.random() <= setting.MUTATION_P:
+                    j = random.randint(0, nodes_number - 1)
+                    crossPA.population[j] = 1 - crossPA.population[j]
+            
+                    j2 = random.randint(0, nodes_number - 1)
+                    crossPB.population[j2] = 1 - crossPB.population[j2]
+
+            crossPA.fitness()
+            crossPB.fitness()
+
+            print(crossPA.scoreFitness)
+            print(crossPB.scoreFitness)
+
+            FE +=2
+            
+            #Evaluate? Genetic is over
+
 
 
 

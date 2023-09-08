@@ -52,6 +52,7 @@ class Mutation:
         #generate an array in order to select (turn on VERTICES)
         self.population = self.__generateRandom__(len(vertices))
 
+
     def __generateRandom__(self,populationNumber):
         pop_random = []
 
@@ -60,7 +61,7 @@ class Mutation:
             pop_random.append(int(np.random.choice(np.arange(0,2)))) #, p=[0.01, 0.95]
         return pop_random
     
-    def ResetPopulation(self,population):
+    def SetPopulation(self,population):
         self.population=population
 
     def fitness(self):
@@ -68,7 +69,7 @@ class Mutation:
         for i in range(len(self.population)):
             if(self.population[i] == 1):
                 localW = int(self.vertices[i].weight)
-                print("adding w:"+str(localW))
+                #print("adding w:"+str(localW))
                 total_fitness += localW
 
         self.scoreFitness = total_fitness
