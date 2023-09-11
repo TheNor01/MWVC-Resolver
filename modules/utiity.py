@@ -6,6 +6,14 @@ import numpy as np
 
 import copy
 
+
+def save_plt(mean,best,problemName):
+    #plt.plot(mean, label='mean_fitness')
+    plt.plot(best, label='best_scores')
+    plt.legend()
+    plt.savefig("output/images/"+problemName+".png")
+    plt.show()
+
 def Selection(method,ALL_POPULATION,K):
 
     a =  None
@@ -35,6 +43,7 @@ def UniformCross(A,B,p):
         temp = A[i]
         A[i] = B[i]
         B[i] = temp
+
     return A,B
 
 def Crossover(method,parent1,parent2,vertexNumber):
@@ -47,20 +56,22 @@ def Crossover(method,parent1,parent2,vertexNumber):
 
     x = random.randint(0, vertexNumber - 2) # to slice after
     allX = random.sample(range(1, vertexNumber), 5) #for instance
+
     #singlePoint
     if(method==0):
-        a,b = copy.deepcopy(BaseCross(parent1P,parent2P,x))
+        parent1P,parent2P = BaseCross(parent1P,parent2P,x)
     #Multipoint
     elif(method==1):
         for i in allX:
-            a,b = copy.deepcopy(BaseCross(parent1P,parent2P,i))
+            parent1P,parent2P = BaseCross(parent1P,parent2P,i)
     #uniform
     else:
         p = np.random.rand(vertexNumber)
-        a,b = copy.deepcopy(UniformCross(parent1P,parent2P,p))
+        parent1P,parent2P = UniformCross(parent1P,parent2P,p)
 
 
     #return 2 two objects with population
-    return a,b
+    out1 = copy.deepcopy(parent1P)
+    out2 = copy.deepcopy(parent2P)
 
-
+    return out1,out2

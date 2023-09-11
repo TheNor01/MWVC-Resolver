@@ -39,7 +39,7 @@ import string
 alpha_dict = dict(enumerate(string.ascii_lowercase))
 
 
-print(alpha_dict)
+#print(alpha_dict)
 
 class Vertex:
     def __init__(self, vertex, weight):
@@ -49,6 +49,9 @@ class Vertex:
         
     def addNeighbors(self, v):
         self.neighbors.append(v)
+    
+    def getNeighbors(self):
+        return self.neighbors
 
 
 class Graph:
@@ -65,7 +68,7 @@ class Graph:
 
     def initVertex(self, weight):
         for i in range(self.vertex_numbers):
-            vertex = Vertex(alpha_dict[i], weight[i])
+            vertex = Vertex(str(i), weight[i])
             self.vertices[i] = vertex
 
     def buildEdges(self):
@@ -77,8 +80,5 @@ class Graph:
                     #crea edge
                     edge = [self.vertices[i].name, self.vertices[j].name]
                     self.edges.append(edge)
-
-    def checkLink(i,j):
-        pass
 
 

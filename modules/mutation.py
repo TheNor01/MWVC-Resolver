@@ -42,11 +42,7 @@ class Mutation:
     def __init__(self,vertices):
 
         #population should be vertex
-        self.mean_scores = [] 
-        self.best_scores = [] 
-
         self.vertices = vertices
-
         self.scoreFitness = 0
 
         #generate an array in order to select (turn on VERTICES)
@@ -57,8 +53,8 @@ class Mutation:
         pop_random = []
 
         np.random.seed()
-        for _ in range(populationNumber): #uniform prob or not?
-            pop_random.append(int(np.random.choice(np.arange(0,2)))) #, p=[0.01, 0.95]
+        for i in range(populationNumber): #uniform prob or not?
+            pop_random.append(int(np.random.choice(np.arange(0,2),p=[0.02, 0.98])))
         return pop_random
     
     def SetPopulation(self,population):
@@ -72,7 +68,30 @@ class Mutation:
                 #print("adding w:"+str(localW))
                 total_fitness += localW
 
+        #print("function fit: " + str(total_fitness))
         self.scoreFitness = total_fitness
+
+    #def __eq__(self, other):
+    #    return self.population == other.population
+
+    
+    def isValid(self):
+
+        #print("Checking valid")
+        #print(self.population)
+        #this as not valid solution. If there is a zero, i have to find another 0 in order to not traverse the entire graph.
+        for i in range(len(self.population)):
+            if self.population[i] == 0:
+                tmp = self.vertices[i]
+                tmp_neigh = tmp.getNeighbors()
+                #print("neigh: ")
+                #print(*tmp_neigh.name, sep = ", ")
+                for j in range(len(tmp_neigh)): #loop his neighbors
+                    tmp_vertex = int(tmp_neigh[j].name)
+                    #print(tmp_vertex)
+                    if self.population[tmp_vertex] == 0: #not connected. 0 is down
+                        return True
+        return False
     
     
 

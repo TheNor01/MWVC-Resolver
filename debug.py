@@ -3,6 +3,14 @@ from modules.mutation import Mutation
 from modules.utiity import *
 from settings import setting
 
+"""
+
+(20,60); (20,120); (20,150); (100,500); (100,2000); (200,750); 
+(200,3000); e  (800,10000).
+
+
+"""
+
 import random
 INSTANCE_PATH = "instances/"
 
@@ -11,12 +19,10 @@ if __name__ == "__main__":
     #LOAD SETTINGS
     setting.init()
 
-
-
     print("STARTING ... \n")
 
     #print("choose input filename")
-    file_path = "vc_20_60_01"
+    file_path = "vc_100_500_10"
 
     #file_path = input()
 
@@ -36,6 +42,9 @@ if __name__ == "__main__":
 
     print(nodes_number)
     print(node_weights)
+
+    mean_scores = [] 
+    best_scores = [] 
 
     #build links
     links_lines = inputLines[2:]
@@ -63,103 +72,164 @@ if __name__ == "__main__":
     #We should create a set of random solution
 
     ALL_POPULATION = []
+    random.seed()
 
     if(setting.POPULATION <= 1):
         print("SET A POPULATION > 1")
         exit()
 
-    FE = 1 #F E = 2 × 104 as the maximum number for objective function evaluations.
+    FE = 1    #FE = 2 × 104 as the maximum number for objective function evaluations.
 
+    #SETUP POPULATION
     for i in range(setting.POPULATION):
         print("sol:"+str(i))
-        mutationTool = Mutation(graph.vertices)
 
-
-        print(mutationTool.population)
-        mutationTool.fitness()
-        print(mutationTool.scoreFitness)
-
+        while(True): #we start from valid cover
+            mutationTool = Mutation(graph.vertices)
+            if(mutationTool.isValid()):
+                print(mutationTool.population)
+                mutationTool.fitness()
+                print(mutationTool.scoreFitness)
+                break
+            
         ALL_POPULATION.append(mutationTool) #every mutation has a population and a fitness
 
         #bug fitness is always zero --> solved
 
-    for iteration in range(setting.LIMIT_ITER):
+    #PROCESSING
+    iteration=True
+    while(iteration):
 
+        valid_population = []
         #selection step
 
-        #for _ in range(int(setting.POPULATION / 2)): #to check
-        for _ in range(1): #test
-
+        for _ in range(int(setting.POPULATION / 2)): #to check
+        #for _ in range(1): #test
+#----------------------------------------------------
             #SELECTION
                 #0 : roulette
                 #1 : Tournament
                 #2 : random
 
-
-            ## !!!!!!!!! doesn't change, Try different name
-
             #solution  --> fix
             #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
-
-
             print("SELECTION PHASE...")
-            parentA, parentB = Selection(2,ALL_POPULATION,2) #method, pop, how many parents
+            parentA, parentB = Selection(0,ALL_POPULATION,2) #method, pop, how many parents
 
-            print(parentA.population)
-            print(parentA.scoreFitness)
-            print(parentB.population)
-            print(parentB.scoreFitness)
+            print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
+            print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
 
+#----------------------------------------------------
             #CROSSOVER  https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
             crossPA = Mutation(graph.vertices)
             crossPB = Mutation(graph.vertices)
 
+
+            """
+            print("----")
+            print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
+            print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
+            print("----")
+            """
+
             if random.random() <= setting.CROSS_P:
-
                 print("CROSSOVER PHASE...")
-                parentAP,parentBP = Crossover(3,parentA,parentB,nodes_number)
+                parentAP,parentBP = Crossover(0,parentA,parentB,nodes_number)
 
+                #print(parentAP)
+                #print("POST CROSS A")
                 crossPA.SetPopulation(parentAP)
                 crossPA.fitness()
+                
+                #print("POST SET A")
+                #print(crossPA.population)
 
+                #print(crossPB.population)
                 crossPB.SetPopulation(parentBP)
                 crossPB.fitness()
 
                 FE +=2
 
-                print(crossPA.population)
-                print(crossPA.scoreFitness)
-                print(crossPB.population)
-                print(crossPB.scoreFitness)
+                print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
+                print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
 
             else:
+                print("NOT CROSSOVER PHASE...")
                 crossPA.SetPopulation(parentA.population)
                 crossPB.SetPopulation(parentB.population)
+                crossPA.fitness()
+                crossPB.fitness()
 
+                FE +=2
 
-            #Mutation, alter a single bit(iteration??)
-            for i in range(nodes_number):
-                if random.random() <= setting.MUTATION_P:
-                    j = random.randint(0, nodes_number - 1)
-                    crossPA.population[j] = 1 - crossPA.population[j]
+#----------------------------------------------------
+            #MUTATION, alter a single bit(iteration??)
+
+            print("MUTATION PHASE...")
+        
+            if random.random() <= setting.MUTATION_P:
+                print("changing bit 1")
+                j = random.randint(0, nodes_number - 1)
+                crossPA.population[j] = 1 - crossPA.population[j]
+
             
-                    j2 = random.randint(0, nodes_number - 1)
-                    crossPB.population[j2] = 1 - crossPB.population[j2]
+            #for i in range(nodes_number):
+            if random.random() <= setting.MUTATION_P:
+                print("changing bit 2")
+                j2 = random.randint(0, nodes_number - 1)
+                crossPB.population[j2] = 1 - crossPB.population[j2]
 
             crossPA.fitness()
             crossPB.fitness()
 
-            print(crossPA.scoreFitness)
-            print(crossPB.scoreFitness)
+            print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
+            print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
 
             FE +=2
+
+
+            #tested until here
             
             #Evaluate? Genetic is over
+            # we want to select all nodes that links each nodes with mininum weights
+                #check links cover
+
+            #replace population?
+            if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
+                print("adding crossPa")
+                valid_population.append(crossPA)
+
+            if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
+                print("adding crossPb")
+                valid_population.append(crossPB)
+
+            #WE iterate over valid cover set again
+
+            #NEXT ITER
+
+            #EVOLUTION, according to #https://aicorespot.io/evolution-strategies-from-the-ground-up-in-python/
+
+            #print(len(ALL_POPULATION))
+            #print(len(valid_population))
+
+            #we sum the 2 population in order to pass them into other iteration 
+            ALL_POPULATION = sorted(ALL_POPULATION + valid_population, key = lambda i: i.scoreFitness, reverse = False)[0:setting.POPULATION]
 
 
+            #mean_fitness = sum([i.scoreFitness for i in ALL_POPULATION]) / setting.POPULATION # fitness mean of the population 
+            best_fitness = min([i.scoreFitness for i in ALL_POPULATION]) # best values of the fitness
+            #mean_scores.append(mean_fitness)
+            best_scores.append(best_fitness)
 
 
+            #print("Mean:"+str(mean_fitness))
+            #print("Best:"+str(best_fitness))
             
-        
-        pass
+            if(FE > setting.LIMIT_ITER):
+                print("MAX Fitness evaluation")
+                iteration = False
+
+
+
+save_plt(mean_scores,best_scores,file_path)
