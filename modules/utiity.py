@@ -7,12 +7,12 @@ import numpy as np
 import copy
 
 
-def save_plt(mean,best,problemName):
+def save_plt(best,problemName):
     #plt.plot(mean, label='mean_fitness')
     plt.plot(best, label='best_scores')
     plt.legend()
     plt.savefig("output/images/"+problemName+".png")
-    plt.show()
+    #plt.show()
 
 def Selection(method,ALL_POPULATION,K):
 
