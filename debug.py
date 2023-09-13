@@ -28,13 +28,19 @@ if __name__ == "__main__":
     print("STARTING ... \n")
 
     #print("choose input filename")
-    file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
+    #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
+    #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_01","vc_100_500_01","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
+    file_pathAll = ["vc_800_10000"]
+    
 
     file_pathList,timeList,scoreList, = [],[],[]
-
-
     #file_path = input()
     for file_path in file_pathAll:
+
+        #file_pathList.clear()
+        #timeList.clear()
+        #scoreList.clear()
+        
         print("Processing input: " + str(file_path)+"\n")
 
         f = open(INSTANCE_PATH+file_path+".txt", "r")
@@ -134,7 +140,7 @@ if __name__ == "__main__":
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
                 print("SELECTION PHASE...")
-                parentA, parentB = Selection(0,ALL_POPULATION,2) #method, pop, how many parents
+                parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
 
                 print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
                 print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))

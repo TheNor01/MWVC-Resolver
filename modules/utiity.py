@@ -12,6 +12,8 @@ def save_plt(best,problemName):
     plt.plot(best, label='best_scores')
     plt.legend()
     plt.savefig("output/images/"+problemName+".png")
+    plt.cla()
+    plt.close()
     #plt.show()
 
 def Selection(method,ALL_POPULATION,K):
