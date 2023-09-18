@@ -75,8 +75,6 @@ if __name__ == "__main__":
 
         graph = Graph(nodes_number, linksStructure,node_weights) 
 
-        print(graph.edges) 
-
         print("Population setting: "+str(setting.POPULATION))
         ALL_POPULATION = []
         random.seed()

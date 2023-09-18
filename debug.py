@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #print("choose input filename")
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
     #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_01","vc_100_500_01","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
-    file_pathAll = ["vc_800_10000"]
+    file_pathAll = ["vc_20_60_01s"]
     
 
     file_pathList,timeList,scoreList, = [],[],[]
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 
         graph = Graph(nodes_number, linksStructure,node_weights) 
 
-        print(graph.edges) # alphabet is working!
+        #print(graph.edges) # alphabet is working!
         #print(graph.linking_structure)
 
         #NB. Some links are reduntat. Trucante it if needed

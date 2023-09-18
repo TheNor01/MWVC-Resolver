@@ -59,7 +59,7 @@ class Graph:
         self.vertices = {} # we store vertex obj
         self.vertex_numbers = vertex_numbers
         self.linking_structure = linking # matrix?
-        self.edges = [] #is it redundant?
+        #self.edges = [] #is it redundant?
 
         #automatically calls init Vertex passing weights
         self.initVertex(weights)
@@ -78,7 +78,7 @@ class Graph:
                     #aggiungi ai vicini sia lato vertice
                     self.vertices[i].addNeighbors(self.vertices[j])
                     #crea edge
-                    edge = [self.vertices[i].name, self.vertices[j].name]
-                    self.edges.append(edge)
+                    #edge = [self.vertices[i].name, self.vertices[j].name]
+                    #self.edges.append(edge)
 
 
