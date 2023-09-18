@@ -43,9 +43,10 @@ if __name__ == "__main__":
 
     print("choose input filename")
 
-    file_pathAll = [input("Insert file to resolve (without .txt):\n")]
+    file_pathInput = input("Insert file/s to resolve (without .txt) and separated by ',' :\n")
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
 
+    file_pathAll = file_pathInput.strip().split(",")
     file_pathList,timeList,scoreList, = [],[],[]
     for file_path in file_pathAll:
 
@@ -115,9 +116,7 @@ if __name__ == "__main__":
                 print("SELECTION PHASE...")
                 parentA, parentB = Selection(1,ALL_POPULATION,2)
 
-                print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
-                print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
-
+               
     #----------------------------------------------------
                 #CROSSOVER 
                 crossPA = Mutation(graph.vertices)
@@ -135,9 +134,7 @@ if __name__ == "__main__":
 
                     FE +=2
 
-                    print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
-                    print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
-
+                  
                 else:
                     print("NOT CROSSOVER PHASE...")
                     crossPA.SetPopulation(parentA.population)
