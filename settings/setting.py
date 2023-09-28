@@ -4,7 +4,7 @@
 
 def init():
     global POPULATION
-    POPULATION = 120
+    POPULATION = 100
 
     global CROSS_P
     CROSS_P = 0.7

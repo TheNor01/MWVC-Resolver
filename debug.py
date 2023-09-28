@@ -29,8 +29,9 @@ if __name__ == "__main__":
 
     #print("choose input filename")
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
-    #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_01","vc_100_500_01","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
-    file_pathAll = ["vc_100_500_01"]
+    #file_pathAll = ["vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
+    #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_02","vc_100_500_02","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
+    file_pathAll = ["vc_800_10000"]
     
 
     file_pathList,timeList,scoreList, = [],[],[]
@@ -107,14 +108,14 @@ if __name__ == "__main__":
         #SETUP POPULATION
         st = time.time()
         for i in range(setting.POPULATION):
-            print("sol:"+str(i))
+            #print("sol:"+str(i))
 
             while(True): #we start from valid cover
                 mutationTool = Mutation(graph.vertices)
                 if(mutationTool.isValid()):
-                    print(mutationTool.population)
+                    #print(mutationTool.population)
                     mutationTool.fitness()
-                    print(mutationTool.scoreFitness)
+                    #print(mutationTool.scoreFitness)
                     break
                 
             ALL_POPULATION.append(mutationTool) #every mutation has a population and a fitness
@@ -125,7 +126,7 @@ if __name__ == "__main__":
         iteration=True
 
         allTimeBest = 999999999
-        counter = 1500
+        counter = 8000
 
         while(iteration):
 
@@ -143,11 +144,11 @@ if __name__ == "__main__":
                 #solution  --> fix
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
-                print("SELECTION PHASE...")
+                #print("SELECTION PHASE...")
                 parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
 
-                print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
-                print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
+                #print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
+                #print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
 
     #----------------------------------------------------
                 #CROSSOVER  https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
@@ -167,15 +168,15 @@ if __name__ == "__main__":
                 """
 
                 if random.random() <= setting.CROSS_P:
-                    print("CROSSOVER PHASE...")
+                    #print("CROSSOVER PHASE...")
 
                     #crossover population base
-                    #parentAP,parentBP = Crossover(0,parentA,parentB,nodes_number)
+                    parentAP,parentBP = Crossover(1,parentA,parentB,nodes_number)
 
 
                     #we can extend the base crossover using allPopulation (it will be sorted already)
-                    parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
-                    parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
+                    #parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
+                    #parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
 
 
 
@@ -191,14 +192,14 @@ if __name__ == "__main__":
                     crossPB.SetPopulation(parentBP)
                     crossPB.fitness()
 
-                    parentAP,parentBP = Crossover(0,crossPA,crossPB,nodes_number)
+                    #parentAP,parentBP = Crossover(2,crossPA,crossPB,nodes_number)
                     FE +=2
 
-                    print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
-                    print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
+                    #print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
+                    #print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
 
                 else:
-                    print("NOT CROSSOVER PHASE...")
+                    #print("NOT CROSSOVER PHASE...")
                     crossPA.SetPopulation(parentA.population)
                     crossPB.SetPopulation(parentB.population)
                     crossPA.fitness()
@@ -209,10 +210,10 @@ if __name__ == "__main__":
     #----------------------------------------------------
                 #MUTATION, alter a single bit(iteration??)
 
-                print("MUTATION PHASE...")
+                #print("MUTATION PHASE...")
             
                 if random.random() <= setting.MUTATION_P:
-                    print("changing bit 1")
+                    #print("changing bit 1")
                     j = random.randint(0, nodes_number - 1)
                     crossPA.population[j] = 1 - crossPA.population[j]
                     j_ = random.randint(0,nodes_number-1)
@@ -222,7 +223,7 @@ if __name__ == "__main__":
                 
                 #for i in range(nodes_number):
                 if random.random() <= setting.MUTATION_P:
-                    print("changing bit 2")
+                    #print("changing bit 2")
                     j2 = random.randint(0, nodes_number - 1)
                     crossPB.population[j2] = 1 - crossPB.population[j2]
                     j2_ = random.randint(0,nodes_number-1)
@@ -235,7 +236,6 @@ if __name__ == "__main__":
 
                 FE +=2
 
-
                 #tested until here
                 
                 #Evaluate? Genetic is over
@@ -244,13 +244,13 @@ if __name__ == "__main__":
 
                 #replace population?
                 if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
-                    print("adding crossPa")
-                    print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
+                    #print("adding crossPa")
+                    #print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
                     valid_population.append(crossPA)
 
                 if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
-                    print("adding crossPb")
-                    print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
+                    #print("adding crossPb")
+                    #print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
                     valid_population.append(crossPB)
 
                 #WE iterate over valid cover set again
@@ -271,7 +271,7 @@ if __name__ == "__main__":
 
                 if(best_fitness < allTimeBest): 
                     allTimeBest=best_fitness
-                    counter = 3000
+                    counter = 8000
 
                 if(allTimeBest == best_fitness): counter = counter - 1 
 
@@ -284,9 +284,12 @@ if __name__ == "__main__":
                     print("Fitness evaluation LIMIT")
                     best_all_fitness = min([i.scoreFitness for i in ALL_POPULATION])
                     print("min score F: "+str(best_all_fitness))
+                    print("-------------")
                     scoreList.append(best_fitness)
                     timeList.append(elapsed_time)
                     iteration = False
+                    break
+
 
         save_plt(best_scores,file_path)
 

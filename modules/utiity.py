@@ -87,7 +87,7 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
     #since allpopulation is sorted by score, we can retrieve the first K incremental parent and test 
     # fitness each iteration
 
-    print("MULTIPARENTS")
+    #print("MULTIPARENTS")
 
     subItems = allpopulations[0:K]
     #subItems = random.sample(allpopulations, K)
@@ -114,7 +114,7 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
         if(localPopulation != subP):
             #noImpr=False
 
-            print("-------------")
+            #print("-------------")
             #print("index starts from :" + str(index))
             #print("LOCAL = "+ str(localPopulation))
             #print("SUBBB = "+ str(subP))

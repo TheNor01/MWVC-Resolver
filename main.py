@@ -109,11 +109,15 @@ if __name__ == "__main__":
 
         #PROCESSING
         iteration=True
+
+        allTimeBest = 999999999
+        counter = 8000
+
         while(iteration):
 
             valid_population = []
 
-            for _ in range(int(setting.POPULATION)): 
+            for _ in range(int(setting.POPULATION / 2)): 
     #----------------------------------------------------
                 #SELECTION
                     #0 : roulette
@@ -129,8 +133,14 @@ if __name__ == "__main__":
                 crossPB = Mutation(graph.vertices)
 
                 if random.random() <= setting.CROSS_P:
+
+
+                    parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
+                    parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
+
+
                     print("CROSSOVER PHASE...")
-                    parentAP,parentBP = Crossover(0,parentA,parentB,nodes_number)
+                    parentAP,parentBP = Crossover(0,crossPA,crossPB,nodes_number)
 
                     crossPA.SetPopulation(parentAP)
                     crossPA.fitness()
@@ -158,12 +168,20 @@ if __name__ == "__main__":
                     print("changing bit 1")
                     j = random.randint(0, nodes_number - 1)
                     crossPA.population[j] = 1 - crossPA.population[j]
-
+                    j_ = random.randint(0,nodes_number-1)
+                    while j==j_:
+                        j_=random.randint(0,nodes_number-1)
+                    crossPA.population[j_] = 1 - crossPA.population[j_]
                 
+                #for i in range(nodes_number):
                 if random.random() <= setting.MUTATION_P:
                     print("changing bit 2")
                     j2 = random.randint(0, nodes_number - 1)
                     crossPB.population[j2] = 1 - crossPB.population[j2]
+                    j2_ = random.randint(0,nodes_number-1)
+                    while j2==j2_:
+                        j2_=random.randint(0,nodes_number-1)
+                    crossPB.population[j2_] = 1 - crossPA.population[j2_]
 
                 crossPA.fitness()
                 crossPB.fitness()
@@ -175,10 +193,12 @@ if __name__ == "__main__":
 
                 if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
                     print("adding crossPa")
+                    print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
                     valid_population.append(crossPA)
 
                 if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
                     print("adding crossPb")
+                    print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
                     valid_population.append(crossPB)
 
                 #we sum the 2 population in order to pass them into other iteration 
@@ -188,15 +208,24 @@ if __name__ == "__main__":
                 best_fitness = min([i.scoreFitness for i in ALL_POPULATION]) # best values of the fitness
                 best_scores.append(best_fitness)
 
-                
-                if(FE > setting.LIMIT_ITER):
-                    et = time.time()
+                if(best_fitness < allTimeBest): 
+                    allTimeBest=best_fitness
+                    counter = 8000
 
+                if(allTimeBest == best_fitness): counter = counter - 1 
+
+                
+                if(FE > setting.LIMIT_ITER or counter == 0):
+                    et = time.time()
+                    # get the execution time
                     elapsed_time = et - st
-                    print("MAX Fitness evaluation")
+                    print("Fitness evaluation LIMIT")
+                    best_all_fitness = min([i.scoreFitness for i in ALL_POPULATION])
+                    print("min score F: "+str(best_all_fitness))
                     scoreList.append(best_fitness)
                     timeList.append(elapsed_time)
                     iteration = False
+                    break
 
         save_plt(best_scores,file_path)
 
