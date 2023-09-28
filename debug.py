@@ -13,7 +13,7 @@ import time
 """
 
 import sys
-sys.setrecursionlimit(9999)
+sys.setrecursionlimit(99999)
 
 import random
 INSTANCE_PATH = "instances/"
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #print("choose input filename")
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
     #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_01","vc_100_500_01","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
-    file_pathAll = ["vc_20_60_01"]
+    file_pathAll = ["vc_200_750_01"]
     
 
     file_pathList,timeList,scoreList, = [],[],[]
@@ -140,7 +140,7 @@ if __name__ == "__main__":
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
                 print("SELECTION PHASE...")
-                parentA, parentB = Selection(2,ALL_POPULATION,2) #method, pop, how many parents
+                parentA, parentB = Selection(0,ALL_POPULATION,2) #method, pop, how many parents
 
                 print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
                 print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
@@ -166,14 +166,14 @@ if __name__ == "__main__":
                     print("CROSSOVER PHASE...")
 
                     #crossover population base
-                    parentAP,parentBP = Crossover(0,parentA,parentB,nodes_number)
+                    #parentAP,parentBP = Crossover(1,parentA,parentB,nodes_number)
 
 
                     #we can extend the base crossover using allPopulation (it will be sorted already)
-                    parentMultiA = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,5)
+                    parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,5)
+                    parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,5)
 
 
-                    exit()
                     #print(parentAP)
                     #print("POST CROSS A")
                     crossPA.SetPopulation(parentAP)
@@ -220,9 +220,6 @@ if __name__ == "__main__":
                 crossPA.fitness()
                 crossPB.fitness()
 
-                print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
-                print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
-
                 FE +=2
 
 
@@ -235,10 +232,12 @@ if __name__ == "__main__":
                 #replace population?
                 if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
                     print("adding crossPa")
+                    print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
                     valid_population.append(crossPA)
 
                 if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
                     print("adding crossPb")
+                    print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
                     valid_population.append(crossPB)
 
                 #WE iterate over valid cover set again
@@ -264,7 +263,9 @@ if __name__ == "__main__":
 
                     # get the execution time
                     elapsed_time = et - st
-                    print("MAX Fitness evaluation")
+                    print("Fitness evaluation LIMIT")
+                    best_all_fitness = min([i.scoreFitness for i in ALL_POPULATION])
+                    print("min score F: "+str(best_all_fitness))
                     scoreList.append(best_fitness)
                     timeList.append(elapsed_time)
                     iteration = False

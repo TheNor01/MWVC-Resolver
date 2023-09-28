@@ -148,5 +148,7 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
     newFit = crossPA.scoreFitness
     print("FIT FINAL "+str(newFit))
 
+    return localPopulation
+
 
 
