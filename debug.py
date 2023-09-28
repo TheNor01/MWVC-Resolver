@@ -13,7 +13,7 @@ import time
 """
 
 import sys
-sys.setrecursionlimit(99999)
+sys.setrecursionlimit(9999)
 
 import random
 INSTANCE_PATH = "instances/"
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #print("choose input filename")
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
     #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_01","vc_100_500_01","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
-    file_pathAll = ["vc_200_750_01"]
+    file_pathAll = ["vc_100_500_01"]
     
 
     file_pathList,timeList,scoreList, = [],[],[]
@@ -123,6 +123,10 @@ if __name__ == "__main__":
 
         #PROCESSING
         iteration=True
+
+        allTimeBest = 999999999
+        counter = 1500
+
         while(iteration):
 
             valid_population = []
@@ -140,7 +144,7 @@ if __name__ == "__main__":
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
                 print("SELECTION PHASE...")
-                parentA, parentB = Selection(0,ALL_POPULATION,2) #method, pop, how many parents
+                parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
 
                 print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
                 print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
@@ -166,12 +170,13 @@ if __name__ == "__main__":
                     print("CROSSOVER PHASE...")
 
                     #crossover population base
-                    #parentAP,parentBP = Crossover(1,parentA,parentB,nodes_number)
+                    #parentAP,parentBP = Crossover(0,parentA,parentB,nodes_number)
 
 
                     #we can extend the base crossover using allPopulation (it will be sorted already)
-                    parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,5)
-                    parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,5)
+                    parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
+                    parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
+
 
 
                     #print(parentAP)
@@ -186,6 +191,7 @@ if __name__ == "__main__":
                     crossPB.SetPopulation(parentBP)
                     crossPB.fitness()
 
+                    parentAP,parentBP = Crossover(0,crossPA,crossPB,nodes_number)
                     FE +=2
 
                     print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
@@ -209,13 +215,20 @@ if __name__ == "__main__":
                     print("changing bit 1")
                     j = random.randint(0, nodes_number - 1)
                     crossPA.population[j] = 1 - crossPA.population[j]
-
+                    j_ = random.randint(0,nodes_number-1)
+                    while j==j_:
+                        j_=random.randint(0,nodes_number-1)
+                    crossPA.population[j_] = 1 - crossPA.population[j_]
                 
                 #for i in range(nodes_number):
                 if random.random() <= setting.MUTATION_P:
                     print("changing bit 2")
                     j2 = random.randint(0, nodes_number - 1)
                     crossPB.population[j2] = 1 - crossPB.population[j2]
+                    j2_ = random.randint(0,nodes_number-1)
+                    while j2==j2_:
+                        j2_=random.randint(0,nodes_number-1)
+                    crossPB.population[j2_] = 1 - crossPA.population[j2_]
 
                 crossPA.fitness()
                 crossPB.fitness()
@@ -256,11 +269,16 @@ if __name__ == "__main__":
                 best_fitness = min([i.scoreFitness for i in ALL_POPULATION]) # best values of the fitness
                 best_scores.append(best_fitness)
 
+                if(best_fitness < allTimeBest): 
+                    allTimeBest=best_fitness
+                    counter = 3000
+
+                if(allTimeBest == best_fitness): counter = counter - 1 
+
                 #print("Best:"+str(best_fitness))
                 
                 if(FE > setting.LIMIT_ITER):
                     et = time.time()
-
                     # get the execution time
                     elapsed_time = et - st
                     print("Fitness evaluation LIMIT")

@@ -90,23 +90,24 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
     print("MULTIPARENTS")
 
     subItems = allpopulations[0:K]
+    #subItems = random.sample(allpopulations, K)
     subPopulations = [x.population for x in subItems]
 
-    print(subPopulations)
+    #print(subPopulations)
     basePopulation = parent.population
     crossPA.SetPopulation(parent.population)
     crossPA.fitness()
     baseFitness = crossPA.scoreFitness
 
-    print("STARTING MULTI FIT: "+str(baseFitness))
+    #print("STARTING MULTI FIT: "+str(baseFitness))
 
     localPopulation = copy.deepcopy(basePopulation)
 
-    print("LOCAL = "+ str(localPopulation))
+    #print("LOCAL = "+ str(localPopulation))
     #while(isValid):
         
     popSize = len(subPopulations[0])
-    print("pop size: "+str(popSize))
+    #print("pop size: "+str(popSize))
 
     index = 0
     for subP in subPopulations: #for every population
@@ -114,13 +115,13 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
             #noImpr=False
 
             print("-------------")
-            print("index starts from :" + str(index))
-            print("LOCAL = "+ str(localPopulation))
-            print("SUBBB = "+ str(subP))
+            #print("index starts from :" + str(index))
+            #print("LOCAL = "+ str(localPopulation))
+            #print("SUBBB = "+ str(subP))
             validRange = True
             while(validRange and index < popSize):
                 if(localPopulation[index] !=  subP[index]): #do the change
-                    print("changing: "+str(index))
+                    #print("changing: "+str(index))
 
                     tmp = localPopulation[index]
                     localPopulation[index] = subP[index]
@@ -128,9 +129,9 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
                     crossPA.SetPopulation(localPopulation)
                     crossPA.fitness()
                     newFit = crossPA.scoreFitness
-                    print("FIT "+str(newFit))
+                    #print("FIT "+str(newFit))
                     if(newFit >= baseFitness ):
-                        print("NONE Improv -> skip sub") #skip subPopulation and restart from index
+                        #print("NONE Improv -> skip sub") #skip subPopulation and restart from index
                         validRange = False
                         localPopulation[index] = tmp
                         #popSize = index #restart from here
@@ -142,13 +143,15 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
             #validRange = False 
             #if(noImpr==True): continue #skip
 
-    print("LOCAL FINAL= "+ str(localPopulation))
+    #print("LOCAL FINAL= "+ str(localPopulation))
     crossPA.SetPopulation(localPopulation)
     crossPA.fitness()
     newFit = crossPA.scoreFitness
-    print("FIT FINAL "+str(newFit))
+    #print("FIT FINAL "+str(newFit))
 
-    return localPopulation
+    out = copy.deepcopy(localPopulation)
+
+    return out
 
 
 
