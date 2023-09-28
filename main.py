@@ -26,6 +26,13 @@ import time
 
 """
 
+
+# Todo 
+# 1) Improved genetic crossver n parents
+# 2) debug istanza 20_120_01
+# 3) relazione
+
+
 import sys
 sys.setrecursionlimit(9999) #change according python version and you system
 
@@ -64,7 +71,6 @@ if __name__ == "__main__":
 
         
         node_weights = [int(s) for s in node_weights.split() if s.isdigit()]
-        mean_scores = [] 
         best_scores = [] 
 
         #build links

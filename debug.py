@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #print("choose input filename")
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
     #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_01","vc_100_500_01","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
-    file_pathAll = ["vc_20_60_01s"]
+    file_pathAll = ["vc_20_60_01"]
     
 
     file_pathList,timeList,scoreList, = [],[],[]
@@ -140,13 +140,17 @@ if __name__ == "__main__":
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
                 print("SELECTION PHASE...")
-                parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
+                parentA, parentB = Selection(2,ALL_POPULATION,2) #method, pop, how many parents
 
                 print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
                 print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
 
     #----------------------------------------------------
                 #CROSSOVER  https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
+
+
+
+                #init new parents
                 crossPA = Mutation(graph.vertices)
                 crossPB = Mutation(graph.vertices)
 
@@ -160,8 +164,16 @@ if __name__ == "__main__":
 
                 if random.random() <= setting.CROSS_P:
                     print("CROSSOVER PHASE...")
+
+                    #crossover population base
                     parentAP,parentBP = Crossover(0,parentA,parentB,nodes_number)
 
+
+                    #we can extend the base crossover using allPopulation (it will be sorted already)
+                    parentMultiA = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,5)
+
+
+                    exit()
                     #print(parentAP)
                     #print("POST CROSS A")
                     crossPA.SetPopulation(parentAP)
