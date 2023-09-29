@@ -101,7 +101,10 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
 
     #print("STARTING MULTI FIT: "+str(baseFitness))
 
-    localPopulation = copy.deepcopy(basePopulation)
+    #print(type(basePopulation))
+    localPopulation =list(copy.deepcopy(basePopulation))
+
+    #print(type(localPopulation))
 
     #print("LOCAL = "+ str(localPopulation))
     #while(isValid):
@@ -111,6 +114,9 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
 
     index = 0
     for subP in subPopulations: #for every population
+
+        #print(localPopulation)
+        #print(subP)
         if(localPopulation != subP):
             #noImpr=False
 

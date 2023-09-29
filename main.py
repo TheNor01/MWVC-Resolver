@@ -55,6 +55,8 @@ if __name__ == "__main__":
 
     file_pathAll = file_pathInput.strip().split(",")
     file_pathList,timeList,scoreList, = [],[],[]
+    doMultiCross = 1
+
     for file_path in file_pathAll:
 
         
@@ -95,14 +97,14 @@ if __name__ == "__main__":
         #SETUP POPULATION
         st = time.time()
         for i in range(setting.POPULATION):
-            print("sol:"+str(i))
+            #vc_20_60_01print("sol:"+str(i))
 
             while(True): #we start from valid cover
                 mutationTool = Mutation(graph.vertices)
                 if(mutationTool.isValid()):
-                    print(mutationTool.population)
+                    #print(mutationTool.population)
                     mutationTool.fitness()
-                    print(mutationTool.scoreFitness)
+                    #print(mutationTool.scoreFitness)
                     break
                 
             ALL_POPULATION.append(mutationTool)
@@ -112,7 +114,6 @@ if __name__ == "__main__":
 
         allTimeBest = 999999999
         counter = 8000
-        doMultiCross = 1
 
         while(iteration):
 
@@ -141,8 +142,7 @@ if __name__ == "__main__":
                         parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
 
 
-                    print("CROSSOVER PHASE...")
-                    parentAP,parentBP = Crossover(0,crossPA,crossPB,nodes_number)
+                   
 
                     crossPA.SetPopulation(parentAP)
                     crossPA.fitness()
@@ -150,6 +150,8 @@ if __name__ == "__main__":
                     crossPB.SetPopulation(parentBP)
                     crossPB.fitness()
 
+                    print("CROSSOVER PHASE...")
+                    parentAP,parentBP = Crossover(0,crossPA,crossPB,nodes_number)
                     FE +=2
 
                   
@@ -167,7 +169,7 @@ if __name__ == "__main__":
                 print("MUTATION PHASE...")
             
                 if random.random() <= setting.MUTATION_P:
-                    print("changing bit 1")
+                    #print("changing bit 1")
                     j = random.randint(0, nodes_number - 1)
                     crossPA.population[j] = 1 - crossPA.population[j]
                     j_ = random.randint(0,nodes_number-1)
@@ -177,7 +179,7 @@ if __name__ == "__main__":
                 
                 #for i in range(nodes_number):
                 if random.random() <= setting.MUTATION_P:
-                    print("changing bit 2")
+                    #print("changing bit 2")
                     j2 = random.randint(0, nodes_number - 1)
                     crossPB.population[j2] = 1 - crossPB.population[j2]
                     j2_ = random.randint(0,nodes_number-1)
@@ -188,19 +190,16 @@ if __name__ == "__main__":
                 crossPA.fitness()
                 crossPB.fitness()
 
-                print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
-                print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
-
                 FE +=2
 
                 if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
-                    print("adding crossPa")
-                    print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
+                    #print("adding crossPa")
+                    #print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
                     valid_population.append(crossPA)
 
                 if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
-                    print("adding crossPb")
-                    print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
+                    #print("adding crossPb")
+                    #print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
                     valid_population.append(crossPB)
 
                 #we sum the 2 population in order to pass them into other iteration 
@@ -224,6 +223,7 @@ if __name__ == "__main__":
                     print("Fitness evaluation LIMIT")
                     best_all_fitness = min([i.scoreFitness for i in ALL_POPULATION])
                     print("min score F: "+str(best_all_fitness))
+                    print("-------------")
                     scoreList.append(best_fitness)
                     timeList.append(elapsed_time)
                     iteration = False
