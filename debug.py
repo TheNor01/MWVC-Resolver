@@ -277,7 +277,7 @@ if __name__ == "__main__":
 
                 #print("Best:"+str(best_fitness))
                 
-                if(FE > setting.LIMIT_ITER):
+                if(FE > setting.LIMIT_ITER or counter==0):
                     et = time.time()
                     # get the execution time
                     elapsed_time = et - st

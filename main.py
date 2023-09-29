@@ -112,6 +112,7 @@ if __name__ == "__main__":
 
         allTimeBest = 999999999
         counter = 8000
+        doMultiCross = 1
 
         while(iteration):
 
@@ -135,8 +136,9 @@ if __name__ == "__main__":
                 if random.random() <= setting.CROSS_P:
 
 
-                    parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
-                    parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
+                    if doMultiCross==1:
+                        parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
+                        parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
 
 
                     print("CROSSOVER PHASE...")
