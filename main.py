@@ -12,6 +12,7 @@ Resolving MWVC using genetic algorithms
 """
 from modules.classes import Graph
 from modules.mutation import Mutation
+from modules.localsearch import LocalSA
 from modules.utiity import *
 from settings import setting
 import pandas as pd
@@ -55,8 +56,16 @@ if __name__ == "__main__":
 
     file_pathAll = file_pathInput.strip().split(",")
     file_pathList,timeList,scoreList, = [],[],[]
-    doMultiCross = 1
+    #file_path = input()
 
+
+    #define local search 
+
+
+
+    doMultiCross = 0
+    doMutation = 0
+    doLocal = 1
     for file_path in file_pathAll:
 
         
@@ -83,6 +92,7 @@ if __name__ == "__main__":
             linksStructure.append(i)
 
         graph = Graph(nodes_number, linksStructure,node_weights) 
+        localSearch = LocalSA(5000,nodes_number,2500,0.95)
 
         print("Population setting: "+str(setting.POPULATION))
         ALL_POPULATION = []
@@ -97,17 +107,24 @@ if __name__ == "__main__":
         #SETUP POPULATION
         st = time.time()
         for i in range(setting.POPULATION):
-            #vc_20_60_01print("sol:"+str(i))
+            #print("sol:"+str(i))
 
-            while(True): #we start from valid cover
-                mutationTool = Mutation(graph.vertices)
-                if(mutationTool.isValid()):
-                    #print(mutationTool.population)
-                    mutationTool.fitness()
-                    #print(mutationTool.scoreFitness)
-                    break
-                
-            ALL_POPULATION.append(mutationTool)
+            i = 0
+            valid = True
+            pop = None
+            while(valid): #we start from valid cover
+                    mutationTool = Mutation(graph.vertices)
+                    if(mutationTool.isValid()):
+                        valid = False
+                        pop  = mutationTool.population
+
+
+            mutationTool = Mutation(graph.vertices)
+            mutationTool.SetPopulation(pop)
+            mutationTool.fitness()
+            ALL_POPULATION.append(mutationTool) #every mutation has a population and a fitness
+
+            #bug fitness is always zero --> solved
 
         #PROCESSING
         iteration=True
@@ -166,26 +183,28 @@ if __name__ == "__main__":
 
     #----------------------------------------------------
 
-                print("MUTATION PHASE...")
+                #print("MUTATION PHASE...")
+
+                if(doMutation):
             
-                if random.random() <= setting.MUTATION_P:
-                    #print("changing bit 1")
-                    j = random.randint(0, nodes_number - 1)
-                    crossPA.population[j] = 1 - crossPA.population[j]
-                    j_ = random.randint(0,nodes_number-1)
-                    while j==j_:
-                        j_=random.randint(0,nodes_number-1)
-                    crossPA.population[j_] = 1 - crossPA.population[j_]
-                
-                #for i in range(nodes_number):
-                if random.random() <= setting.MUTATION_P:
-                    #print("changing bit 2")
-                    j2 = random.randint(0, nodes_number - 1)
-                    crossPB.population[j2] = 1 - crossPB.population[j2]
-                    j2_ = random.randint(0,nodes_number-1)
-                    while j2==j2_:
-                        j2_=random.randint(0,nodes_number-1)
-                    crossPB.population[j2_] = 1 - crossPA.population[j2_]
+                    if random.random() <= setting.MUTATION_P:
+                        #print("changing bit 1")
+                        j = random.randint(0, nodes_number - 1)
+                        crossPA.population[j] = 1 - crossPA.population[j]
+                        j_ = random.randint(0,nodes_number-1)
+                        while j==j_:
+                            j_=random.randint(0,nodes_number-1)
+                        crossPA.population[j_] = 1 - crossPA.population[j_]
+                    
+                    #for i in range(nodes_number):
+                    if random.random() <= setting.MUTATION_P:
+                        #print("changing bit 2")
+                        j2 = random.randint(0, nodes_number - 1)
+                        crossPB.population[j2] = 1 - crossPB.population[j2]
+                        j2_ = random.randint(0,nodes_number-1)
+                        while j2==j2_:
+                            j2_=random.randint(0,nodes_number-1)
+                        crossPB.population[j2_] = 1 - crossPA.population[j2_]
 
                 crossPA.fitness()
                 crossPB.fitness()
@@ -193,13 +212,9 @@ if __name__ == "__main__":
                 FE +=2
 
                 if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
-                    #print("adding crossPa")
-                    #print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
                     valid_population.append(crossPA)
 
                 if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
-                    #print("adding crossPb")
-                    #print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
                     valid_population.append(crossPB)
 
                 #we sum the 2 population in order to pass them into other iteration 
@@ -216,7 +231,7 @@ if __name__ == "__main__":
                 if(allTimeBest == best_fitness): counter = counter - 1 
 
                 
-                if(FE > setting.LIMIT_ITER or counter == 0):
+                if(FE > setting.LIMIT_ITER or counter==0):
                     et = time.time()
                     # get the execution time
                     elapsed_time = et - st
@@ -227,7 +242,19 @@ if __name__ == "__main__":
                     scoreList.append(best_fitness)
                     timeList.append(elapsed_time)
                     iteration = False
+
+
+                    if(doLocal):
+                        #CALL LOCAL SEARCH using a subset population
+                        mutation = ALL_POPULATION[0]
+                        #print(mutation)
+                        solution,fitness = localSearch.simulated_annealing(mutation)
+
+                        print("LOCAL SA debug")
+                        print(' '.join(map(str, solution))  +  " - score: " +str(fitness))
+                    
                     break
+
 
         save_plt(best_scores,file_path)
 
