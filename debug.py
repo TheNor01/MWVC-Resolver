@@ -5,12 +5,20 @@ from modules.utiity import *
 from settings import setting
 import pandas as pd
 import time
+import os
 """
 
 (20,60); (20,120); (25,150); (100,500); (100,2000); (200,750); 
 (200,3000); e  (800,10000).
 
 
+
+
+listss = os.listdir("instances")
+
+lst = [os.path.splitext(x)[0] for x in listss]
+print(lst)
+exit()
 """
 
 import sys
@@ -36,6 +44,8 @@ if __name__ == "__main__":
     
 
     file_pathList,timeList,scoreList, = [],[],[]
+
+
     #file_path = input()
 
 
@@ -44,8 +54,8 @@ if __name__ == "__main__":
 
 
     doMultiCross = 1
-    doMutation = 0
-    doLocal = 1
+    doMutation = 1
+    doLocal = 0
     for file_path in file_pathAll:
 
         #file_pathList.clear()

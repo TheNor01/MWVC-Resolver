@@ -28,7 +28,7 @@ class LocalSA:
         best_solution = current_solution.copy()
         
         best_distance = current_distance
-        print(type(best_solution))
+        #print(type(best_solution))
         temperature = self.initial_temperature
 
         tabu_list = []
@@ -44,7 +44,7 @@ class LocalSA:
             neighbor_distance = mutation.scoreFitness
 
             #if score is lower, we check if is VALID
-            print(type(neighbor))
+            #print(type(neighbor))
             is_in_list = np.any(np.all(neighbor == tabu_list, axis=0))
             if(not mutation.isValid() and not is_in_list):
 
