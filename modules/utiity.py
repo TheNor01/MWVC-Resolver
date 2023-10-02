@@ -136,17 +136,15 @@ def MultiParentCrossover(crossPA,parent,allpopulations,K):
                     crossPA.fitness()
                     newFit = crossPA.scoreFitness
                     #print("FIT "+str(newFit))
-                    if(newFit >= baseFitness):
+                    if(newFit >= baseFitness or crossPA.isValid()):
                         #print("NONE Improv -> skip sub") #skip subPopulation and restart from index
                         validRange = False
                         localPopulation[index] = tmp
                         #popSize = index #restart from here
                         break #avoid increment index
-                    elif (not crossPA.isValid()):
-                        baseFitness = newFit
                     else :
                         localPopulation[index] = tmp    
-                        continue
+                        #continue
 
                 index = index + 1
             #validRange = False 
