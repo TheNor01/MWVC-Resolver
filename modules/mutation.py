@@ -65,10 +65,8 @@ class Mutation:
         for i in range(len(self.population)):
             if(self.population[i] == 1):
                 localW = int(self.vertices[i].weight)
-                #print("adding w:"+str(localW))
                 total_fitness += localW
 
-        #print("function fit: " + str(total_fitness))
         self.scoreFitness = total_fitness
 
     #def __eq__(self, other):
@@ -77,19 +75,20 @@ class Mutation:
     
     def isValid(self):
 
-        #print("Checking valid")
-        #print(self.population)
+        #problem
+
         #this as not valid solution. If there is a zero, i have to find another 0 in order to not traverse the entire graph.
         for i in range(len(self.population)):
             if self.population[i] == 0:
                 tmp = self.vertices[i]
                 tmp_neigh = tmp.getNeighbors()
-                #print("neigh: ")
-                #print(*tmp_neigh.name, sep = ", ")
+
                 for j in range(len(tmp_neigh)): #loop his neighbors
                     tmp_vertex = int(tmp_neigh[j].name)
                     #print(tmp_vertex)
+                    #print("check:"+ str(self.population[tmp_vertex]))
                     if self.population[tmp_vertex] == 0: #not connected. 0 is down
+                        #print("TRUE EXIT")
                         return True
         return False
     

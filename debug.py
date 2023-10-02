@@ -1,5 +1,6 @@
 from modules.classes import Graph
 from modules.mutation import Mutation
+from modules.localsearch import LocalSA
 from modules.utiity import *
 from settings import setting
 import pandas as pd
@@ -31,11 +32,20 @@ if __name__ == "__main__":
     #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
     #file_pathAll = ["vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
     #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_02","vc_100_500_02","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
-    file_pathAll = ["vc_800_10000"]
+    file_pathAll = ["vc_20_60_01"]
     
 
     file_pathList,timeList,scoreList, = [],[],[]
     #file_path = input()
+
+
+    #define local search 
+
+
+
+    doMultiCross = 0
+    doMutation = 0
+    doLocal = 1
     for file_path in file_pathAll:
 
         #file_pathList.clear()
@@ -61,13 +71,6 @@ if __name__ == "__main__":
         
 
 
-        #print(nodes_number)
-        #print(node_weights)
-
-        #nodeList.append(nodes_number)
-        #edgeList.append(len(node_weights))
-
-
         mean_scores = [] 
         best_scores = [] 
 
@@ -84,10 +87,8 @@ if __name__ == "__main__":
 
         graph = Graph(nodes_number, linksStructure,node_weights) 
 
-        #print(graph.edges) # alphabet is working!
-        #print(graph.linking_structure)
-
-        #NB. Some links are reduntat. Trucante it if needed
+        #init LocalSA
+        localSearch = LocalSA(5000,nodes_number,2500,0.95)
 
 
         #Checking settings file
@@ -103,21 +104,26 @@ if __name__ == "__main__":
             print("SET A POPULATION > 1")
             exit()
 
-        FE = 1    #FE = 2 × 104 as the maximum number for objective function evaluations.
+        FE = 1    
 
         #SETUP POPULATION
         st = time.time()
         for i in range(setting.POPULATION):
             #print("sol:"+str(i))
 
-            while(True): #we start from valid cover
-                mutationTool = Mutation(graph.vertices)
-                if(mutationTool.isValid()):
-                    #print(mutationTool.population)
-                    mutationTool.fitness()
-                    #print(mutationTool.scoreFitness)
-                    break
-                
+            i = 0
+            valid = True
+            pop = None
+            while(valid): #we start from valid cover
+                    mutationTool = Mutation(graph.vertices)
+                    if(mutationTool.isValid()):
+                        valid = False
+                        pop  = mutationTool.population
+
+
+            mutationTool = Mutation(graph.vertices)
+            mutationTool.SetPopulation(pop)
+            mutationTool.fitness()
             ALL_POPULATION.append(mutationTool) #every mutation has a population and a fitness
 
             #bug fitness is always zero --> solved
@@ -145,7 +151,7 @@ if __name__ == "__main__":
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
                 #print("SELECTION PHASE...")
-                parentA, parentB = Selection(1,ALL_POPULATION,2) #method, pop, how many parents
+                parentA, parentB = Selection(0,ALL_POPULATION,2) #method, pop, how many parents
 
                 #print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
                 #print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
@@ -175,8 +181,9 @@ if __name__ == "__main__":
 
 
                     #we can extend the base crossover using allPopulation (it will be sorted already)
-                    #parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
-                    #parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
+                    if(doMultiCross):
+                        parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
+                        parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
 
 
 
@@ -211,25 +218,28 @@ if __name__ == "__main__":
                 #MUTATION, alter a single bit(iteration??)
 
                 #print("MUTATION PHASE...")
+
+                if(doMutation):
             
-                if random.random() <= setting.MUTATION_P:
-                    #print("changing bit 1")
-                    j = random.randint(0, nodes_number - 1)
-                    crossPA.population[j] = 1 - crossPA.population[j]
-                    j_ = random.randint(0,nodes_number-1)
-                    while j==j_:
-                        j_=random.randint(0,nodes_number-1)
-                    crossPA.population[j_] = 1 - crossPA.population[j_]
-                
-                #for i in range(nodes_number):
-                if random.random() <= setting.MUTATION_P:
-                    #print("changing bit 2")
-                    j2 = random.randint(0, nodes_number - 1)
-                    crossPB.population[j2] = 1 - crossPB.population[j2]
-                    j2_ = random.randint(0,nodes_number-1)
-                    while j2==j2_:
-                        j2_=random.randint(0,nodes_number-1)
-                    crossPB.population[j2_] = 1 - crossPA.population[j2_]
+                    if random.random() <= setting.MUTATION_P:
+                        #print("changing bit 1")
+                        j = random.randint(0, nodes_number - 1)
+                        crossPA.population[j] = 1 - crossPA.population[j]
+                        j_ = random.randint(0,nodes_number-1)
+                        while j==j_:
+                            j_=random.randint(0,nodes_number-1)
+                        crossPA.population[j_] = 1 - crossPA.population[j_]
+                    
+                    #for i in range(nodes_number):
+                    if random.random() <= setting.MUTATION_P:
+                        #print("changing bit 2")
+                        j2 = random.randint(0, nodes_number - 1)
+                        crossPB.population[j2] = 1 - crossPB.population[j2]
+                        j2_ = random.randint(0,nodes_number-1)
+                        while j2==j2_:
+                            j2_=random.randint(0,nodes_number-1)
+                        crossPB.population[j2_] = 1 - crossPA.population[j2_]
+
 
                 crossPA.fitness()
                 crossPB.fitness()
@@ -244,13 +254,9 @@ if __name__ == "__main__":
 
                 #replace population?
                 if (not (crossPA.isValid()) and (not crossPA in valid_population) and (not crossPA in ALL_POPULATION)):
-                    #print("adding crossPa")
-                    #print(' '.join(map(str, crossPA.population))  +  " - score: " +str(crossPA.scoreFitness))
                     valid_population.append(crossPA)
 
                 if (not (crossPB.isValid()) and (not crossPB in valid_population) and (not crossPB in ALL_POPULATION)):
-                    #print("adding crossPb")
-                    #print(' '.join(map(str, crossPB.population))  +  " - score: " +str(crossPB.scoreFitness))
                     valid_population.append(crossPB)
 
                 #WE iterate over valid cover set again
@@ -288,6 +294,17 @@ if __name__ == "__main__":
                     scoreList.append(best_fitness)
                     timeList.append(elapsed_time)
                     iteration = False
+
+
+                    if(doLocal):
+                        #CALL LOCAL SEARCH using a subset population
+                        mutation = ALL_POPULATION[0]
+                        #print(mutation)
+                        solution,fitness = localSearch.simulated_annealing(mutation)
+
+                        print("LOCAL SA debug")
+                        print(' '.join(map(str, solution))  +  " - score: " +str(fitness))
+                    
                     break
 
 
