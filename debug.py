@@ -37,7 +37,7 @@ if __name__ == "__main__":
     print("STARTING ... \n")
 
     #print("choose input filename")
-    #file_pathAll = ["vc_20_60_01","vc_20_120_01","vc_25_150_01","vc_100_500_01","vc_100_2000_01","vc_200_750_01","vc_200_3000_01"]
+    #file_pathAll = ["vc_20_60_01","vc_20_120_01"]
     #file_pathAll = ["vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
     #file_pathAll = ["vc_20_60_02","vc_20_120_02","vc_25_150_02","vc_100_500_02","vc_100_2000_02","vc_200_750_02","vc_200_3000_02"]
     file_pathAll = ["vc_20_60_01"]
@@ -53,9 +53,18 @@ if __name__ == "__main__":
 
 
 
-    doMultiCross = 1
+    doMultiCross = 0
     doMutation = 1
     doLocal = 0
+
+
+    listss = os.listdir("instances")
+    #file_pathAll = [os.path.splitext(x)[0] for x in listss]
+    #file_pathAll =[ele for ele in file_pathAll if ele.endswith("04")]
+    #print(file_pathAll)
+
+    #SEL 0 - CROSS 1
+
     for file_path in file_pathAll:
 
         #file_pathList.clear()
@@ -142,7 +151,7 @@ if __name__ == "__main__":
         iteration=True
 
         allTimeBest = 999999999
-        counter = 8000
+        counter = 16000
 
         while(iteration):
 
@@ -160,11 +169,11 @@ if __name__ == "__main__":
                 #solution  --> fix
                 #Assignment statements in Python do not copy objects, they create bindings between a target and an object.
 
-                #print("SELECTION PHASE...")
+                print("SELECTION PHASE...")
                 parentA, parentB = Selection(0,ALL_POPULATION,2) #method, pop, how many parents
 
-                #print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
-                #print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
+                print(' '.join(map(str, parentA.population)) + " - score: " +str(parentA.scoreFitness))
+                print(' '.join(map(str, parentB.population)) + " - score: " +str(parentB.scoreFitness))
 
     #----------------------------------------------------
                 #CROSSOVER  https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
@@ -184,7 +193,7 @@ if __name__ == "__main__":
                 """
 
                 if random.random() <= setting.CROSS_P:
-                    #print("CROSSOVER PHASE...")
+                    print("CROSSOVER PHASE...")
 
                     #crossover population base
                     #parentAP,parentBP = Crossover(1,parentA,parentB,nodes_number)
@@ -195,7 +204,7 @@ if __name__ == "__main__":
                         parentAP = MultiParentCrossover(crossPA,parentA,ALL_POPULATION,3)
                         parentBP = MultiParentCrossover(crossPB,parentB,ALL_POPULATION,3)
                     else:
-                        parentAP,parentBP = Crossover(1,parentA,parentB,nodes_number)
+                        parentAP,parentBP = Crossover(2,parentA,parentB,nodes_number)
 
 
 
@@ -227,9 +236,9 @@ if __name__ == "__main__":
                     FE +=2
 
     #----------------------------------------------------
-                #MUTATION, alter a single bit(iteration??)
+                #MUTATION
 
-                #print("MUTATION PHASE...")
+                print("MUTATION PHASE...")
 
                 if(doMutation):
             
